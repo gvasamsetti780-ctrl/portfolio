@@ -1,0 +1,396 @@
+/* ====================================================================
+ * SPORTS CAR & MOTORSPORT 3D PORTFOLIO DESIGN SYSTEM
+ * ==================================================================== */
+
+:root {
+  --bg-primary: #070a12;
+  --bg-secondary: #0c101e;
+  --bg-card: rgba(12, 18, 34, 0.78);
+  --border-color: rgba(255, 30, 39, 0.25);
+  --border-hover: rgba(255, 30, 39, 0.8);
+  --accent-red: #ff1e27;
+  --accent-cyan: #00f0ff;
+  --accent-gold: #ffb703;
+  --accent-green: #00ff88;
+  --accent-glow: rgba(255, 30, 39, 0.4);
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Theme: 1. Rosso Corsa Red / Supercar (Default) */
+body.theme-corsa, body.theme-cyber {
+  --bg-primary: #070a12;
+  --bg-secondary: #0c101e;
+  --bg-card: rgba(12, 18, 34, 0.8);
+  --border-color: rgba(255, 30, 39, 0.3);
+  --border-hover: rgba(255, 30, 39, 0.85);
+  --accent-red: #ff1e27;
+  --accent-cyan: #00f0ff;
+  --accent-glow: rgba(255, 30, 39, 0.45);
+}
+
+/* Theme: 2. Electric Nitro Blue */
+body.theme-nitro, body.theme-space {
+  --bg-primary: #040814;
+  --bg-secondary: #081126;
+  --bg-card: rgba(8, 17, 38, 0.82);
+  --border-color: rgba(0, 240, 255, 0.3);
+  --border-hover: rgba(0, 240, 255, 0.9);
+  --accent-red: #00f0ff;
+  --accent-cyan: #38bdf8;
+  --accent-glow: rgba(0, 240, 255, 0.5);
+}
+
+/* Theme: 3. Monaco GP Gold */
+body.theme-monaco, body.theme-matrix {
+  --bg-primary: #0a0904;
+  --bg-secondary: #141208;
+  --bg-card: rgba(24, 20, 10, 0.82);
+  --border-color: rgba(255, 183, 3, 0.3);
+  --border-hover: rgba(255, 183, 3, 0.9);
+  --accent-red: #ffb703;
+  --accent-cyan: #fbbf24;
+  --accent-glow: rgba(255, 183, 3, 0.5);
+}
+
+/* Theme: 4. Stealth Carbon / Matte Gunmetal */
+body.theme-stealth, body.theme-glass {
+  --bg-primary: #08090c;
+  --bg-secondary: #101217;
+  --bg-card: rgba(18, 20, 27, 0.85);
+  --border-color: rgba(148, 163, 184, 0.25);
+  --border-hover: rgba(241, 245, 249, 0.7);
+  --accent-red: #f8fafc;
+  --accent-cyan: #94a3b8;
+  --accent-glow: rgba(255, 255, 255, 0.25);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  line-height: 1.6;
+  min-height: 100vh;
+  position: relative;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* High-Speed Racing Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--accent-red), #00f0ff);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-red);
+}
+
+/* Subtle Carbon Fiber Weave Overlay */
+.scanline-overlay {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    linear-gradient(27deg, #070a12 5px, transparent 5px) 0 5px,
+    linear-gradient(207deg, #070a12 5px, transparent 5px) 10px 0px,
+    linear-gradient(27deg, #0d1222 5px, transparent 5px) 0px 10px,
+    linear-gradient(207deg, #0d1222 5px, transparent 5px) 10px 5px,
+    linear-gradient(90deg, #080b15 10px, transparent 10px),
+    linear-gradient(#0a0e1c 25%, #080b15 25%, #080b15 50%, transparent 50%, transparent 75%, #0d1222 75%, #0d1222);
+  background-size: 20px 20px;
+  opacity: 0.12;
+  z-index: 40;
+}
+
+/* 3D Canvas Background Container */
+#canvas-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: auto;
+  cursor: grab;
+}
+#canvas-container:active {
+  cursor: grabbing;
+}
+
+/* Content layer over 3D canvas */
+.content-layer {
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+/* Motorsport Carbon Glassmorphism Card System */
+.glass-panel {
+  background: var(--bg-card);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  box-shadow: 0 12px 35px -10px rgba(0, 0, 0, 0.75);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.glass-panel:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 18px 45px -10px var(--accent-glow);
+  transform: translateY(-2px);
+}
+
+.glass-panel:hover::before {
+  opacity: 1;
+  background: linear-gradient(90deg, transparent, var(--border-hover), transparent);
+}
+
+/* Neon Gradient & Telemetry Text */
+.text-neon-red {
+  color: var(--accent-red);
+  text-shadow: 0 0 15px var(--accent-glow);
+}
+.text-neon-cyan {
+  color: var(--accent-cyan);
+  text-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+}
+.text-gradient {
+  background: linear-gradient(135deg, #ff1e27 0%, #ff8800 50%, #00f0ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.text-gradient-gold {
+  background: linear-gradient(135deg, #ffb703 0%, #fb8500 50%, #ffffff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Aerodynamic Racing Buttons */
+.cyber-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #fff;
+  background: linear-gradient(135deg, rgba(255, 30, 39, 0.2) 0%, rgba(255, 30, 39, 0.05) 100%);
+  border: 1px solid var(--accent-red);
+  border-radius: 0.6rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 0 15px rgba(255, 30, 39, 0.2);
+}
+
+.cyber-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+  transition: left 0.5s ease;
+}
+
+.cyber-button:hover::after {
+  left: 100%;
+}
+
+.cyber-button:hover {
+  background: var(--accent-red);
+  color: #ffffff;
+  box-shadow: 0 0 30px var(--accent-glow);
+  transform: translateY(-2px);
+}
+
+.cyber-button:active {
+  transform: translateY(0);
+}
+
+/* Nitro Blue Button Variant */
+.cyber-button-purple, .cyber-button-cyan {
+  color: #00f0ff;
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.15) 0%, rgba(0, 240, 255, 0.03) 100%);
+  border-color: #00f0ff;
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+}
+
+.cyber-button-purple:hover, .cyber-button-cyan:hover {
+  background: #00f0ff;
+  color: #070a12;
+  box-shadow: 0 0 30px rgba(0, 240, 255, 0.6);
+}
+
+/* 3D Perspective Card Tilt */
+.tilt-card-container {
+  perspective: 1200px;
+}
+.tilt-card {
+  transition: transform 0.15s ease-out, box-shadow 0.25s ease;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.tilt-card-inner {
+  transform: translateZ(30px);
+}
+
+/* 3D Viewport Mode Switcher Buttons */
+.mode-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  border-radius: 0.5rem;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.mode-btn:hover {
+  border-color: var(--accent-red);
+  color: #fff;
+  transform: translateY(-1px);
+}
+.mode-btn.active {
+  background: rgba(255, 30, 39, 0.2);
+  border-color: var(--accent-red);
+  color: var(--accent-red);
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+/* Audio Equalizer / Tachometer Bars */
+.eq-bar {
+  display: inline-block;
+  width: 3px;
+  height: 12px;
+  background: var(--accent-red);
+  border-radius: 2px;
+  margin: 0 1px;
+}
+.eq-active .eq-bar:nth-child(1) { animation: eqBounce 0.6s infinite ease-in-out; }
+.eq-active .eq-bar:nth-child(2) { animation: eqBounce 0.4s infinite ease-in-out 0.1s; }
+.eq-active .eq-bar:nth-child(3) { animation: eqBounce 0.7s infinite ease-in-out 0.2s; }
+.eq-active .eq-bar:nth-child(4) { animation: eqBounce 0.5s infinite ease-in-out 0.15s; }
+
+@keyframes eqBounce {
+  0%, 100% { height: 4px; background: var(--accent-red); }
+  50% { height: 18px; background: #00f0ff; }
+}
+
+/* RPM Tachometer Shift Light Bar */
+.rpm-shift-light {
+  height: 4px;
+  width: 100%;
+  background: linear-gradient(90deg, #00ff88 0%, #00ff88 60%, #ffb703 80%, #ff1e27 100%);
+  border-radius: 2px;
+}
+
+/* Glowing Exhaust Pulse Animation */
+@keyframes exhaustPulse {
+  0%, 100% { opacity: 0.8; filter: drop-shadow(0 0 10px var(--accent-glow)); }
+  50% { opacity: 1; filter: drop-shadow(0 0 25px var(--accent-glow)); }
+}
+.pulse-glow {
+  animation: exhaustPulse 2.5s infinite ease-in-out;
+}
+
+/* Racing ECU Terminal Console */
+.terminal-window {
+  font-family: var(--font-mono);
+  background: rgba(8, 12, 22, 0.94);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  box-shadow: 0 15px 45px -10px rgba(0, 0, 0, 0.85);
+}
+.terminal-header {
+  background: rgba(14, 20, 36, 0.98);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0.65rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.terminal-body {
+  padding: 1.2rem;
+  min-height: 280px;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+/* Matrix Digital Rain Overlay */
+#matrix-rain-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.94);
+  z-index: 100;
+}
+
+/* Slide-out Customizer Drawer */
+#profile-drawer {
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+#profile-drawer.open {
+  transform: translateX(0);
+}
+
+/* Modal Transitions */
+.modal-overlay {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
